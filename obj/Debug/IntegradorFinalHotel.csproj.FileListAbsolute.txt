@@ -1,0 +1,7 @@
+C:\Users\tinch\OneDrive\Documentos\IDRA\PROGRAMACION\Integrador\Hotel\IntegradorFinalHotel\bin\Debug\IntegradorFinalHotel.exe.config
+C:\Users\tinch\OneDrive\Documentos\IDRA\PROGRAMACION\Integrador\Hotel\IntegradorFinalHotel\bin\Debug\IntegradorFinalHotel.exe
+C:\Users\tinch\OneDrive\Documentos\IDRA\PROGRAMACION\Integrador\Hotel\IntegradorFinalHotel\bin\Debug\IntegradorFinalHotel.pdb
+C:\Users\tinch\OneDrive\Documentos\IDRA\PROGRAMACION\Integrador\Hotel\IntegradorFinalHotel\obj\Debug\IntegradorFinalHotel.csproj.AssemblyReference.cache
+C:\Users\tinch\OneDrive\Documentos\IDRA\PROGRAMACION\Integrador\Hotel\IntegradorFinalHotel\obj\Debug\IntegradorFinalHotel.csproj.CoreCompileInputs.cache
+C:\Users\tinch\OneDrive\Documentos\IDRA\PROGRAMACION\Integrador\Hotel\IntegradorFinalHotel\obj\Debug\IntegradorFinalHotel.exe
+C:\Users\tinch\OneDrive\Documentos\IDRA\PROGRAMACION\Integrador\Hotel\IntegradorFinalHotel\obj\Debug\IntegradorFinalHotel.pdb
