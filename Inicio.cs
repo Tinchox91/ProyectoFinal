@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml;
 
 namespace IntegradorFinalHotel
 {
@@ -31,7 +33,8 @@ namespace IntegradorFinalHotel
 
         static void Main(string[] args)
         {
-            inicializarArreglos();
+       
+        inicializarArreglos();
             // Bucle principal del menú
             do
             {
@@ -42,6 +45,7 @@ namespace IntegradorFinalHotel
         // Método para mostrar el menú principal
         static Boolean Menu()
         {
+            Console.Clear();
             Boolean salidaMenu = true;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Elija la opción:");
@@ -57,7 +61,7 @@ namespace IntegradorFinalHotel
             {
                 case "1": agregarReserva(); break; // Llama al método para agregar una reserva
                                                    // case "2": modificarReserva(); break; // Para implementar la modificación de reservas
-                                                   // case "3": cancelarReserva(); break; // Para implementar la cancelación de reservas
+                                                    case "3": eliminarReserva(); break; // Para implementar la cancelación de reservas
                                                    // case "4": busquedaReserva(); break; // Para buscar reservas por nombre
                                                    // case "5": listarReservasOrdenadas(); break; // Para listar reservas ordenadas
                 case "6": salidaMenu = false; return salidaMenu; // Salida del menú
@@ -75,6 +79,7 @@ namespace IntegradorFinalHotel
         }
         static void inicializarArreglos()
         {
+       
             for (int i = 0; i < 30; i++)
             {
                 for (int j = 0; j < 9; j++)
@@ -300,7 +305,89 @@ namespace IntegradorFinalHotel
 
             Console.ResetColor(); // Restaurar colores de consola.
         }
-       
+
+       static void eliminarReserva()
+        {
+            long dniHues;
+            int codigoEliminacion;
+            bool valCodigo=true;
+            bool eliminado=true;
+            Console.ForegroundColor=ConsoleColor.DarkBlue;
+            Console.WriteLine("******_Eliminacion de una Reserva/Huesped_******");
+                       mostrarReservas();
+            Console.ResetColor();
+            Console.Write("Ingrese el id de la reserva que quiera eliminar: ");
+            do
+            {
+                Console.ResetColor();
+                string codigo = Console.ReadLine();                
+                 valCodigo = int.TryParse(codigo, out codigoEliminacion);
+                if (!valCodigo)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor =ConsoleColor.Red;
+                    Console.WriteLine("Ingrese formato que corresponda!");                    
+                }             
+            } while (!valCodigo);
+
+
+           
+            for (int i = reservas.Count - 1; i >= 0; i--) 
+            {
+                if (reservas[i].IdReserva == codigoEliminacion)
+                {
+                    
+                    dniHues = reservas[i].dniHuesped;
+                    reservas.RemoveAt(i);  
+                    eliminado = true;
+
+                    
+                    for (int j = huespedes.Count - 1; j >= 0; j--)
+                    {
+                        if (huespedes[j].dni == dniHues)
+                        {
+                            huespedes.RemoveAt(j);
+                        }
+                    }
+                    break; 
+                }
+                else
+                {
+                    eliminado=false;
+                }
+            }
+
+            
+            if (eliminado)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("¡Reserva y huésped eliminados!");
+            }
+            else
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("No se encontró la reserva.");
+            }
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("Apriete cualquier tecla para continuar...");
+            Console.ReadKey();
+
+        }
+        static void mostrarReservas()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            for (int i = 0; i < reservas.Count; i++)
+            {
+                Console.WriteLine($"Id:{reservas[i].IdReserva} - Dni del Huesped: {reservas[i].dniHuesped} - Numero de habitacion: {reservas[i].NumeroHabitacion} - Check-in: {reservas[i].checkIn} -  Cantidad de noches: {reservas[i].cantNoches}");
+                Console.WriteLine("--------------------------------------------------------");
+            }
+
+        }
+
+
 
 
 
@@ -311,85 +398,9 @@ namespace IntegradorFinalHotel
 
 
 
-//codigo de Rocio 
-//static bool validarHabitaciones(int numeroHabitacion)
-//{
-//    if (numeroHabitacion < 0 || numeroHabitacion >= habitaciones.Length)
-//    {
-//        Console.WriteLine("Numero de habitacion invalido");
-//        return false;
-//    }
-//    else
-//    {
-//        Console.WriteLine("La habitacion esta disponible.");
-//        return true;
-//    }
-
-
-//static void busquedaReserva()
-//{
-//    Console.Clear();
-//    Console.Write("Ingrese el nombre del huesped: "); 
-//    string nombreHuesped=Console.ReadLine();
-//    string result = busquedaReserva(nombreHuesped);
-//    Console.WriteLine(result);
-
-//}
-//static string busquedaReserva(string nombre)
-//{
-//    Console.ForegroundColor = ConsoleColor.Red;
-//    string busqueda = "No se encontro la reserva";
-//    foreach (var nom in reservas)
-//    {
-//        if (nom.NombreHuesped == nombre)
-//        {
-//            Console.ForegroundColor = ConsoleColor.Green;
-//            busqueda = $"ID: {nom.IdReserva} //  Nombre del Huesped: {nom.NombreHuesped} // Numero de Habitacion: {nom.NumeroHabitacion} // Check-in: {nom.FechaIngreso.ToString()} // Check-out: {nom.FechaSalida.ToString()} ";
-//            break;
-//        }
-
-//    }
-//    return busqueda;
-//}// - metodo de sobrecarga
-//static void cancelarReserva()
-//{
-//    Console.Clear() ;
-//    Console.Write("Ingrese el nombre del Huesped: ");
-//    string nombreH = Console.ReadLine();
-
-//    bool encontrado = false;
-
-//    for (int i = reservas.Count - 1; i >= 0; i--)
-//    {
-//        if (reservas[i].NombreHuesped == nombreH)
-//        {
-//            reservas.RemoveAt(i);
-//            encontrado = true;
-//            Console.WriteLine("Reserva cancelada.");
-//        }
-//    }
-
-//    if (!encontrado)
-//    {
-//        Console.WriteLine("No se encontró el huesped! ");
-//    }
 
 
 
-//}
-//static void modificarReserva()
-//{
-
-//}//completar
-
-//static void listarReservasOrdenadas()
-//{
-
-//}//completar
-//static void ordenarReservas()
-//{
-
-//}//completar
 
 
 
