@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Serialization.Formatters;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,23 +39,26 @@ namespace IntegradorFinalHotel
             // Bucle principal del menú
             do
             {
-                salida = Menu();
+                salida = MenuPrincipal();
             } while (salida != false); // Repite mientras no se elija la opción de salida
         }
 
         // Método para mostrar el menú principal
-        static Boolean Menu()
+        static Boolean MenuPrincipal()
         {
             Console.Clear();
+            string[] opciones = new string[] {
+             "Elija la opción:",
+            "1. Crear Reserva",
+            "2. Modificar Reserva",
+            "3. Cancelar Reserva",
+            "4. Buscar huesped por nombre",
+           "5. Listar reservas ordenadas",
+            "6. Salir"
+        };
             Boolean salidaMenu = true;
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Elija la opción:");
-            Console.WriteLine("1. Crear Reserva");
-            Console.WriteLine("2. Modificar Reserva");
-            Console.WriteLine("3. Cancelar Reserva");
-            Console.WriteLine("4. Buscar huesped por nombre");
-            Console.WriteLine("5. Listar reservas ordenadas");
-            Console.WriteLine("6. Salir");
+            menuOpciones("Hotel Genesis",opciones);
             string eleccion = Console.ReadLine();
 
             switch (eleccion)
@@ -77,6 +81,47 @@ namespace IntegradorFinalHotel
             }
             return salidaMenu;
         }
+        static void menuOpciones(string titulo, string[] opciones)
+        {
+          
+            int longitudMax=titulo.Length;
+            foreach (string i in opciones)
+            {
+                if (i.Length > longitudMax)
+                {
+                    longitudMax = i.Length;
+                }
+            }
+            Console.ForegroundColor= ConsoleColor.DarkGreen;
+            string borde = new string('*', longitudMax + 4);
+            Console.WriteLine(borde);                                
+            Console.WriteLine($"* {CentrarTexto(titulo,longitudMax)} *"); 
+            Console.WriteLine(borde);
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            for (int i = 0; i < opciones.Length; i++)
+            {
+                if (i == 0)
+                {
+                    Console.WriteLine($"* {CentrarTexto(opciones[i], longitudMax)} *");
+                }
+                else
+                {
+                    Console.WriteLine($"* {opciones[i].PadRight(longitudMax)} *");
+                }
+            }
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine(borde);
+            Console.ResetColor();
+        }//Funcion Para Dibujar Menu
+        static string CentrarTexto(string texto, int longitudMaxima)
+        {
+            int espaciosTotales = longitudMaxima - texto.Length;   // Calcula los espacios que faltan para alinear
+            int espaciosIzquierda = espaciosTotales / 2;           // Espacios a la izquierda
+            int espaciosDerecha = espaciosTotales - espaciosIzquierda; // Espacios a la derecha
+
+            // Usa PadRight para centrar el texto
+            return new string(' ', espaciosIzquierda) + texto + new string(' ', espaciosDerecha).PadRight(espaciosDerecha);
+        }//Funcion para centrar el texto en la funcion dibujar menu
         static void inicializarArreglos()
         {
        
@@ -105,21 +150,36 @@ namespace IntegradorFinalHotel
             string nombreHuesped = Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Ingrese el DNI del huésped: ");
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            long dni = long.Parse(Console.ReadLine());
+            bool valIngreso = true;
+            long dni;
+            do
+            {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                string ingresoDni = Console.ReadLine();
+               
+                 valIngreso =long.TryParse(ingresoDni, out dni);
+                if (!valIngreso)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Ingreso invalido! vuelva a ingresar:");
+                }
+            } while (!valIngreso);//validacion de ingreso long
+           
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Ingrese el mail del huésped: ");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             string mail = Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
             ///datos de la reserva
-            Console.WriteLine("Ingrese la fecha de check-In:");
-            Console.WriteLine("1. Octubre");
-            Console.WriteLine("2. Noviembre");
-            Console.WriteLine("3. Diciembre");
+            string[] opcionesMes = new string[] {
+             "Elija la opción:",
+            "1. Octubre",
+            "2. Noviembre",
+            "3. Diciembre"         
+        };
+            menuOpciones("Ingrese la fecha de check-In:", opcionesMes);
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             string opcion = Console.ReadLine();
-
             int mes;
             int dia;
             int cantNoches;
