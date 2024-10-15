@@ -508,19 +508,12 @@ namespace IntegradorFinalHotel
         }
         static void mostrarReservasOrdenadas()
         {
-            int dimensionReservas = reservas.Count();
-            ReservasStruct[] traigoReservas = new ReservasStruct[dimensionReservas];
-            for (int i = 0; i < dimensionReservas; i++)
-            {
-                traigoReservas[i].idReserva = reservas[i].IdReserva;
-                traigoReservas[i].numeroHabitacion = reservas[i].NumeroHabitacion;
-                traigoReservas[i].dniHuesped = reservas[i].dniHuesped;
-                traigoReservas[i].checkIn = reservas[i].checkIn;
-                traigoReservas[i].cantidadNoches = reservas[i].cantNoches;
-            }
-           
-            }
+
+
         }
+        
+    
+    }
 
 
 
