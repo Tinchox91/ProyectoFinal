@@ -16,7 +16,23 @@ namespace IntegradorFinalHotel
     public class Inicio
     {
 
+        struct ReservasStruct
+        {
+            public int idReserva;
+            public long dniHuesped;
+            public int numeroHabitacion;
+            public DateTime checkIn;
+            public int cantidadNoches;
 
+            public ReservasStruct(int idReserva, long dniHuesped, int numeroHabitacion, DateTime checkIn, int cantidadNoches)
+            {
+                this.idReserva = idReserva;
+                this.dniHuesped = dniHuesped;
+                this.numeroHabitacion = numeroHabitacion;
+                this.checkIn = checkIn;
+                this.cantidadNoches = cantidadNoches;
+            }
+        }
 
         // Variables globales
         static int numeroHabitacion; // Almacena el número de la habitación seleccionada
@@ -40,7 +56,7 @@ namespace IntegradorFinalHotel
             do
             {
                 salida = MenuPrincipal();
-            } while (salida != false); // Repite mientras no se elija la opción de salida
+            } while (salida); // Repite mientras no se elija la opción de salida
         }
 
         // Método para mostrar el menú principal
@@ -366,94 +382,152 @@ namespace IntegradorFinalHotel
             Console.ResetColor(); // Restaurar colores de consola.
         }
 
-       static void eliminarReserva()
+        static void eliminarReserva()
         {
+            Console.Clear();
             long dniHues;
             int codigoEliminacion;
-            bool valCodigo=true;
-            bool eliminado=true;
-            Console.ForegroundColor=ConsoleColor.DarkBlue;
+            bool valCodigo = true;
+            bool eliminado = false;
+            bool huespedEliminado = false; // Nueva bandera para el huésped
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("******_Eliminacion de una Reserva/Huesped_******");
-                       mostrarReservas();
+            bool hayReservas = mostrarReservas();
             Console.ResetColor();
-            Console.Write("Ingrese el id de la reserva que quiera eliminar: ");
-            do
-            {
-                Console.ResetColor();
-                string codigo = Console.ReadLine();                
-                 valCodigo = int.TryParse(codigo, out codigoEliminacion);
-                if (!valCodigo)
-                {
-                    Console.Clear();
-                    Console.ForegroundColor =ConsoleColor.Red;
-                    Console.WriteLine("Ingrese formato que corresponda!");                    
-                }             
-            } while (!valCodigo);
-
-
            
-            for (int i = reservas.Count - 1; i >= 0; i--) 
-            {
-                if (reservas[i].IdReserva == codigoEliminacion)
-                {
-                    
-                    dniHues = reservas[i].dniHuesped;
-                    reservas.RemoveAt(i);  
-                    eliminado = true;
 
-                    
-                    for (int j = huespedes.Count - 1; j >= 0; j--)
+            if (hayReservas)
+            {
+                do
+                {
+                    Console.Write("Ingrese el id de la reserva que quiera eliminar: ");
+                    Console.ResetColor();
+                    string codigo = Console.ReadLine();
+                    valCodigo = int.TryParse(codigo, out codigoEliminacion);
+                    if (!valCodigo)
                     {
-                        if (huespedes[j].dni == dniHues)
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Ingrese formato que corresponda!");
+                    }
+
+                    for (int i = reservas.Count - 1; i >= 0; i--)
+                    {
+                        if (reservas[i].IdReserva == codigoEliminacion)
                         {
-                            huespedes.RemoveAt(j);
+                            dniHues = reservas[i].dniHuesped;
+                            reservas.RemoveAt(i);
+                            eliminado = true;
+
+                            for (int j = huespedes.Count - 1; j >= 0; j--)
+                            {
+                                if (huespedes[j].dni == dniHues)
+                                {
+                                    huespedes.RemoveAt(j);
+                                    huespedEliminado = true; // Indicamos que se eliminó al huésped
+                                }
+                            }
+
+                            if (!huespedEliminado)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("No se encontró un huésped con ese DNI.");
+                            }
                         }
                     }
-                    break; 
-                }
-                else
-                {
-                    eliminado=false;
-                }
+
+                    if (eliminado)
+                    {
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("¡Reserva eliminada!");
+
+                        if (huespedEliminado)
+                        {
+                            Console.WriteLine("¡Huésped eliminado!");
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("No se encontró un huésped para la reserva eliminada.");
+                        }
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("No se encontró la reserva.");
+                    }
+
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine("Apriete cualquier tecla para continuar...");
+                    Console.ReadKey();
+                } while (!valCodigo);
             }
 
-            
-            if (eliminado)
+
+
+            else if (!hayReservas)
             {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine("¡Reserva y huésped eliminados!");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("No existen registros");
+                Console.ReadKey();
             }
-            else
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("No se encontró la reserva.");
-            }
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine("Apriete cualquier tecla para continuar...");
-            Console.ReadKey();
+
+
+
+
+
+
 
         }
-        static void mostrarReservas()
+        static bool mostrarReservas()
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             for (int i = 0; i < reservas.Count; i++)
             {
-                Console.WriteLine($"Id:{reservas[i].IdReserva} - Dni del Huesped: {reservas[i].dniHuesped} - Numero de habitacion: {reservas[i].NumeroHabitacion} - Check-in: {reservas[i].checkIn} -  Cantidad de noches: {reservas[i].cantNoches}");
+                Console.WriteLine($"Id:{reservas[i].IdReserva} - Dni del Huesped: {reservas[i].dniHuesped} - Numero de habitacion: {reservas[i].NumeroHabitacion} - Check-in:  {reservas[i].checkIn.Day}/{reservas[i].checkIn.Month}/{reservas[i].checkIn.Year} -  Cantidad de noches: {reservas[i].cantNoches}");
                 Console.WriteLine("--------------------------------------------------------");
             }
+            if (reservas.Count == 0)
+            {
+                return false;
+            }
+            return true;
 
         }
+        
+        static void modificarReserva()
+        {
+            
+        }
+        static void buscarHuespedNombre()
+        {
 
+        }
+        static void mostrarReservasOrdenadas()
+        {
+            int dimensionReservas = reservas.Count();
+            ReservasStruct[] traigoReservas = new ReservasStruct[dimensionReservas];
+            for (int i = 0; i < dimensionReservas; i++)
+            {
+                traigoReservas[i].idReserva = reservas[i].IdReserva;
+                traigoReservas[i].numeroHabitacion = reservas[i].NumeroHabitacion;
+                traigoReservas[i].dniHuesped = reservas[i].dniHuesped;
+                traigoReservas[i].checkIn = reservas[i].checkIn;
+                traigoReservas[i].cantidadNoches = reservas[i].cantNoches;
+            }
+           
+            }
+        }
 
 
 
 
 
     }
-}
+
 
 
 
