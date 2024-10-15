@@ -18,15 +18,15 @@ namespace IntegradorFinalHotel
 
         struct ReservasStruct
         {
-            public int idReserva;
+            public int IdReserva;
             public long dniHuesped;
             public int numeroHabitacion;
             public DateTime checkIn;
             public int cantidadNoches;
 
-            public ReservasStruct(int idReserva, long dniHuesped, int numeroHabitacion, DateTime checkIn, int cantidadNoches)
+            public ReservasStruct(int IdReserva, long dniHuesped, int numeroHabitacion, DateTime checkIn, int cantidadNoches)
             {
-                this.idReserva = idReserva;
+                this.IdReserva = IdReserva;
                 this.dniHuesped = dniHuesped;
                 this.numeroHabitacion = numeroHabitacion;
                 this.checkIn = checkIn;
@@ -46,7 +46,7 @@ namespace IntegradorFinalHotel
 
         // Listas para almacenar información de huéspedes y reservas
         static List<(string NombreHuesped, int NumeroHabitacion, long dni, string mail)> huespedes = new List<(string, int, long, string)>();
-        static List<(int IdReserva, long dniHuesped, int NumeroHabitacion, DateTime checkIn, int cantNoches)> reservas = new List<(int, long, int, DateTime, int)>();
+        static List<ReservasStruct> reservas = new List<ReservasStruct>();
 
         static void Main(string[] args)
         {
@@ -225,8 +225,8 @@ namespace IntegradorFinalHotel
                         {
                             idReserva++;
                             DateTime checkIn = new DateTime(2025, mes, dia);
-
-                            reservas.Add((idReserva, dni, numeroHabitacion, checkIn, cantNoches));
+                            ReservasStruct reserva = new ReservasStruct();
+                            reservas.Add(reserva);
                         }
                         else
                         {
@@ -259,7 +259,8 @@ namespace IntegradorFinalHotel
                         {
                             idReserva++;
                             DateTime checkIn = new DateTime(2025, mes, dia);
-                            reservas.Add((idReserva, dni, numeroHabitacion, checkIn, cantNoches));
+                            ReservasStruct reserva = new ReservasStruct();
+                            reservas.Add(reserva);
                         }
                         else
                         {
@@ -291,7 +292,8 @@ namespace IntegradorFinalHotel
                         {
                             idReserva++;
                             DateTime checkIn = new DateTime(2025, mes, dia);
-                            reservas.Add((idReserva, dni, numeroHabitacion, checkIn, cantNoches));
+                            ReservasStruct reserva = new ReservasStruct();
+                            reservas.Add(reserva);
                         }
                         else
                         {
@@ -487,7 +489,7 @@ namespace IntegradorFinalHotel
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             for (int i = 0; i < reservas.Count; i++)
             {
-                Console.WriteLine($"Id:{reservas[i].IdReserva} - Dni del Huesped: {reservas[i].dniHuesped} - Numero de habitacion: {reservas[i].NumeroHabitacion} - Check-in:  {reservas[i].checkIn.Day}/{reservas[i].checkIn.Month}/{reservas[i].checkIn.Year} -  Cantidad de noches: {reservas[i].cantNoches}");
+                Console.WriteLine($"Id:{reservas[i].IdReserva} - Dni del Huesped: {reservas[i].dniHuesped} - Numero de habitacion: {reservas[i].numeroHabitacion} - Check-in:  {reservas[i].checkIn.Day}/{reservas[i].checkIn.Month}/{reservas[i].checkIn.Year} -  Cantidad de noches: {reservas[i].cantidadNoches}");
                 Console.WriteLine("--------------------------------------------------------");
             }
             if (reservas.Count == 0)
