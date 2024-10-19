@@ -55,27 +55,19 @@ namespace IntegradorFinalHotel
             // Bucle principal del menú
             do
             {
-                salida = MenuPrincipal();
+                salida = MenuPrincipal(menuInteractivo());
             } while (salida); // Repite mientras no se elija la opción de salida
         }
 
         // Método para mostrar el menú principal
-        static Boolean MenuPrincipal()
+        static Boolean MenuPrincipal(string eleccion)
         {
             Console.Clear();
-            string[] opciones = new string[] {
-             "Elija la opción:",
-            "1. Crear Reserva",
-            "2. Modificar Reserva",
-            "3. Cancelar Reserva",
-            "4. Buscar huesped por nombre",
-           "5. Listar reservas ordenadas",
-            "6. Salir"
-        };
+            
             Boolean salidaMenu = true;
-            Console.ForegroundColor = ConsoleColor.White;
-            menuOpciones("Hotel Genesis",opciones);
-            string eleccion = Console.ReadLine();
+            //.ForegroundColor = ConsoleColor.White;
+           // menuOpciones("Hotel Genesis",opciones);
+           // string eleccion = Console.ReadLine();
 
             switch (eleccion)
             {
@@ -96,6 +88,86 @@ namespace IntegradorFinalHotel
                     break;
             }
             return salidaMenu;
+        }
+        static string   menuInteractivo()
+        {
+            string[] opciones = new string[] {
+             "Elija la opción:",
+            "1. Crear Reserva",
+            "2. Modificar Reserva",
+            "3. Cancelar Reserva",
+            "4. Buscar huesped por nombre",
+           "5. Listar reservas ordenadas",
+            "6. Salir" };
+            // Índice de la opción actualmente seleccionada
+            int seleccionActual = 0;
+
+            // Variable para almacenar la tecla presionada
+            ConsoleKey key;
+
+            // Bucle principal que continúa hasta que se presione Enter
+            do
+            {
+                // Limpia la consola en cada iteración para redibujar el menú
+                Console.Clear();
+
+                // Itera sobre las opciones del menú
+                for (int i = 1; i < opciones.Length; i++)
+                {
+                    // Si la opción es la actualmente seleccionada, se resalta
+                    if (i == seleccionActual)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkYellow; // Cambia el color del texto a rojo
+                        Console.WriteLine("* " + opciones[i]); // Imprime la opción con un marcador
+                        Console.ResetColor(); // Restablece el color del texto
+                    }
+                    else
+                    {
+                        // Imprime las opciones que no están seleccionadas
+                        Console.WriteLine("  " + opciones[i]);
+                    }
+                }
+
+                // Captura la tecla presionada por el usuario sin mostrarla en la consola
+                key = Console.ReadKey(true).Key;
+
+                // Maneja la tecla presionada
+                switch (key)
+                {
+                    // Si se presiona la flecha hacia arriba y no estamos en la primera opción
+                    case ConsoleKey.UpArrow:
+                        if (seleccionActual > 0)
+                        {
+                            seleccionActual--; // Mueve la selección una opción hacia arriba
+                        }
+                        break;
+
+                    // Si se presiona la flecha hacia abajo y no estamos en la última opción
+                    case ConsoleKey.DownArrow:
+                        if (seleccionActual < opciones.Length - 1)
+                        {
+                            seleccionActual++; // Mueve la selección una opción hacia abajo
+                        }
+                        break;
+                }
+            } while (key != ConsoleKey.Enter); // El bucle continúa hasta que se presione Enter
+
+            // Limpia la consola al finalizar el bucle
+            Console.Clear();
+
+            switch (seleccionActual)
+            {
+                
+
+                    
+                case 1:return "1" ; break;
+                case 2: return "2" ; break;
+                case 3:return "3" ; break;
+                case 4: return "4" ; break;
+                case 5: return "5"; break;
+
+            }
+            return "6";
         }
         static void menuOpciones(string titulo, string[] opciones)
         {
