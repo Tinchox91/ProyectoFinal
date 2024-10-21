@@ -21,6 +21,9 @@ namespace IntegradorFinalHotel
         static long dni;
         static bool disponibilidad = true, validarD = true, valNoche = true,
             valHabitacion = true, salida = true;
+        static List<ReservasStruct> reservas = new List<ReservasStruct>();
+        static List<huesped> huespedes = new List<huesped>();
+
         struct ReservasStruct
         {
             public int IdReserva;
@@ -53,8 +56,7 @@ namespace IntegradorFinalHotel
                 Mail = mail;
             }
         }
-
-       
+        
 
 
 
@@ -75,14 +77,16 @@ namespace IntegradorFinalHotel
         static bool[,] noviembre = new bool[30, 10]; // 30 días x 10 habitaciones para noviembre
         static bool[,] diciembre = new bool[31, 10]; // 31 días x 10 habitaciones para diciembre
 
-        // Listas para almacenar información de huéspedes y reservas
+        
        
-        static List<ReservasStruct> reservas = new List<ReservasStruct>();
-        static List<huesped> huespedes = new List<huesped>();
+        
         static void Main(string[] args)
         {
 
+            
             inicializarArreglos();
+            cargarDatosDefault();
+            
             // Bucle principal del menú
             do
             {
@@ -109,11 +113,14 @@ namespace IntegradorFinalHotel
             switch (eleccion)
             {
                 case "1":
-                    agregarReserva(); break; // Llama al método para agregar una reserva
+                    
+                    agregarReserva();
+                    break; // Llama al método para agregar una reserva
                                              // case "2": modificarReserva(); break; // Para implementar la modificación de reservas
                 case "3": eliminarReserva(); break; // Para implementar la cancelación de reservas
-                                                    // case "4": busquedaReserva(); break; // Para buscar reservas por nombre
-                                                    // case "5": listarReservasOrdenadas(); break; // Para listar reservas ordenadas
+                                                     //case "4":  break; // Para buscar reservas por nombre
+                                                   case "5": break; // Para listar reservas ordenadas
+                                                    
                 case "6": salidaMenu = false; return salidaMenu; // Salida del menú
                 default:
                     Console.Clear();
@@ -127,7 +134,32 @@ namespace IntegradorFinalHotel
             }
             return salidaMenu;
         }
+        static void cargarDatosDefault()
+        {
+            // Cargar 10 registros manualmente, distribuyendo las reservas en octubre, noviembre y diciembre
+            huespedes.Add(new huesped("Juan Pérez", 10, 40000001, "juan.perez@hotel.com"));
+            huespedes.Add(new huesped("María López", 10, 40000002, "maria.lopez@hotel.com"));
+            huespedes.Add(new huesped("Carlos García", 3, 40000003, "carlos.garcia@hotel.com"));
+            huespedes.Add(new huesped("Ana Martínez", 4, 40000004, "ana.martinez@hotel.com"));
+            huespedes.Add(new huesped("Pedro Sánchez", 5, 40000005, "pedro.sanchez@hotel.com"));
+            huespedes.Add(new huesped("Lucía Ramírez", 6, 40000006, "lucia.ramirez@hotel.com"));
+            huespedes.Add(new huesped("Sofía Torres", 7, 40000007, "sofia.torres@hotel.com"));
+            huespedes.Add(new huesped("Miguel Fernández", 8, 40000008, "miguel.fernandez@hotel.com"));
+            huespedes.Add(new huesped("Laura González", 9, 40000009, "laura.gonzalez@hotel.com"));
+            huespedes.Add(new huesped("Javier Rodríguez", 1, 40000010, "javier.rodriguez@hotel.com"));
 
+            // Cargar las reservas, distribuyendo entre los meses de octubre, noviembre y diciembre
+            reservas.Add(new ReservasStruct(1, 40000001, 10, new DateTime(2023, 10, 5), 3)); // Octubre
+            reservas.Add(new ReservasStruct(2, 40000002, 10, new DateTime(2023, 10, 10), 2)); // Octubre
+            reservas.Add(new ReservasStruct(3, 40000003, 3, new DateTime(2023, 10, 20), 4)); // Octubre
+            reservas.Add(new ReservasStruct(4, 40000004, 4, new DateTime(2023, 11, 1), 5));  // Noviembre
+            reservas.Add(new ReservasStruct(5, 40000005, 5, new DateTime(2023, 11, 10), 3)); // Noviembre
+            reservas.Add(new ReservasStruct(6, 40000006, 6, new DateTime(2023, 11, 20), 2)); // Noviembre
+            reservas.Add(new ReservasStruct(7, 40000007, 7, new DateTime(2023, 12, 1), 4));  // Diciembre
+            reservas.Add(new ReservasStruct(8, 40000008, 8, new DateTime(2023, 12, 10), 5)); // Diciembre
+            reservas.Add(new ReservasStruct(9, 40000009, 9, new DateTime(2023, 12, 15), 3)); // Diciembre
+            reservas.Add(new ReservasStruct(10, 40000010, 1, new DateTime(2023, 12, 25), 2)); // Diciembre
+        }
 
         static string CentrarTexto(string texto, int longitudMaxima)
         {
@@ -474,7 +506,7 @@ namespace IntegradorFinalHotel
                     for (int k = dia; k < dia + cantidadNoches; k++)
                     {
                         // Marca los días como ocupados
-                        mes[i-1, habitacion] = true;
+                        mes[k-1, habitacion] = true;
                     }
                 }
             }
@@ -638,9 +670,27 @@ namespace IntegradorFinalHotel
             return true;
 
         }
+        static void mostrarHuespedes()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            Console.WriteLine("Datos del Huesped: ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            foreach (huesped guest in huespedes)
+            {
+
+                Console.Write($"Nombre : {guest.NombreHuesped}");
+                Console.Write($"DNI : {guest.Dni}");
+                Console.Write($"Mail: {guest.Mail}");
+                Console.Write($"Numero de Habitacion: {guest.NumeroHabitacion}");
+                Console.WriteLine();
+            }
+        }
+
         
         static void modificarReserva()
         {
+
             
         }
         static void buscarHuespedNombre()
