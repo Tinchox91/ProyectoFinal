@@ -20,18 +20,18 @@ namespace IntegradorFinalHotel
         struct ReservasStruct
         {
             public int IdReserva;
-            public long dniHuesped;
-            public int numeroHabitacion;
-            public DateTime checkIn;
-            public int cantidadNoches;
+            public long DniHuesped;
+            public int NumeroHabitacion;
+            public DateTime CheckIn;
+            public int CantidadNoches;
 
-            public ReservasStruct(int IdReserva, long dniHuesped, int numeroHabitacion, DateTime checkIn, int cantidadNoches)
+            public ReservasStruct(int idReserva, long dniHuesped, int numeroHabitacion, DateTime checkIn, int cantidadNoches)
             {
-                this.IdReserva = IdReserva;
-                this.dniHuesped = dniHuesped;
-                this.numeroHabitacion = numeroHabitacion;
-                this.checkIn = checkIn;
-                this.cantidadNoches = cantidadNoches;
+                IdReserva = idReserva;
+                DniHuesped = dniHuesped;
+                NumeroHabitacion = numeroHabitacion;
+                CheckIn = checkIn;
+                CantidadNoches = cantidadNoches;
             }
         }
 
@@ -39,18 +39,24 @@ namespace IntegradorFinalHotel
         // Variables globales
        
         static string diaV;
-        static int dia = 0;
-        static int cantNoches = 0;
-        static bool disponibilidad = true;
-        static int habitacion;
-        static bool validarD = true;
+        static string nombreHuesped;
         static string ingresoNoches = "";
-        static bool valNoche = true;
-        static bool valHabitacion = true;
+        static string mail;
+        static int habitacion;
+        static int dia = 0;
         static long dni;
         static int numeroHabitacion; // Almacena el número de la habitación seleccionada
         static int idReserva = 0; // Identificador de la reserva
+        static int cantNoches = 0;
+        static bool disponibilidad = true;
+        static bool validarD = true;
+        static bool valNoche = true;
+        static bool valHabitacion = true;
         static Boolean salida = true; // Controla la salida del menú principal
+
+
+
+
 
         // Matrices para gestionar la disponibilidad de habitaciones para cada mes
         static bool[,] octubre = new bool[31, 10]; // 31 días x 10 habitaciones para octubre
@@ -146,7 +152,7 @@ namespace IntegradorFinalHotel
             Console.Clear();
             Console.Write("Ingrese el nombre del huésped: ");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            string nombreHuesped = Console.ReadLine();
+             nombreHuesped = Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Ingrese el DNI del huésped: ");
             bool valIngreso = true;
@@ -162,12 +168,12 @@ namespace IntegradorFinalHotel
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Ingreso invalido! vuelva a ingresar:");
                 }
-            } while (!valIngreso);//validacion de ingreso long
+            } while (!valIngreso);//validacion de ingreso long (DNI)
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Ingrese el mail del huésped: ");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            string mail = Console.ReadLine();
+            mail = Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
             ///datos de la reserva
             string[] opcionesMes = new string[] {
@@ -325,6 +331,7 @@ namespace IntegradorFinalHotel
                     DateTime checkIn = new DateTime(2025, mes, dia);
                     ReservasStruct reserva = new ReservasStruct(idReserva, dni, numeroHabitacion, checkIn, cantNoches);
                     reservas.Add(reserva);
+                    huespedes.Add((nombreHuesped,numeroHabitacion,dni,mail));
                 }
                 else
                 {
@@ -544,7 +551,7 @@ namespace IntegradorFinalHotel
                     {
                         if (reservas[i].IdReserva == codigoEliminacion)
                         {
-                            dniHues = reservas[i].dniHuesped;
+                            dniHues = reservas[i].DniHuesped;
                             reservas.RemoveAt(i);
                             eliminado = true;
 
@@ -616,7 +623,11 @@ namespace IntegradorFinalHotel
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             for (int i = 0; i < reservas.Count; i++)
             {
-                Console.WriteLine($"Id:{reservas[i].IdReserva} - Dni del Huesped: {reservas[i].dniHuesped} - Numero de habitacion: {reservas[i].numeroHabitacion} - Check-in:  {reservas[i].checkIn.Day}/{reservas[i].checkIn.Month}/{reservas[i].checkIn.Year} -  Cantidad de noches: {reservas[i].cantidadNoches}");
+                Console.Write($"Id:{reservas[i].IdReserva}");
+                Console.Write($" - Dni del Huesped: {reservas[i].DniHuesped}");
+                Console.Write($"- Numero de habitacion: {reservas[i].NumeroHabitacion}");
+                Console.Write($"- Check-in:  {reservas[i].CheckIn.Day}/{reservas[i].CheckIn.Month}/{reservas[i].CheckIn.Year}");
+                Console.Write($" -  Cantidad de noches: {reservas[i].CantidadNoches}");              
                 Console.WriteLine("--------------------------------------------------------");
             }
             if (reservas.Count == 0)
