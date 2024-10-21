@@ -16,7 +16,11 @@ namespace IntegradorFinalHotel
 {
     public class Inicio
     {
-
+        static string diaV, nombreHuesped, ingresoNoches = "", mail;
+        static int habitacion, dia = 0, numeroHabitacion, idReserva = 0, cantNoches = 0;
+        static long dni;
+        static bool disponibilidad = true, validarD = true, valNoche = true,
+            valHabitacion = true, salida = true;
         struct ReservasStruct
         {
             public int IdReserva;
@@ -34,25 +38,33 @@ namespace IntegradorFinalHotel
                 CantidadNoches = cantidadNoches;
             }
         }
+        struct huesped
+        {
+           public string NombreHuesped;
+           public int NumeroHabitacion;
+           public long Dni;
+           public string Mail;
 
+            public huesped(string nombreHuesped, int numeroHabitacion, long dni, string mail)
+            {
+                NombreHuesped = nombreHuesped;
+                NumeroHabitacion = numeroHabitacion;
+                Dni = dni;
+                Mail = mail;
+            }
+        }
 
-        // Variables globales
        
-        static string diaV;
-        static string nombreHuesped;
-        static string ingresoNoches = "";
-        static string mail;
-        static int habitacion;
-        static int dia = 0;
-        static long dni;
-        static int numeroHabitacion; // Almacena el número de la habitación seleccionada
-        static int idReserva = 0; // Identificador de la reserva
-        static int cantNoches = 0;
-        static bool disponibilidad = true;
-        static bool validarD = true;
-        static bool valNoche = true;
-        static bool valHabitacion = true;
-        static Boolean salida = true; // Controla la salida del menú principal
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -64,9 +76,9 @@ namespace IntegradorFinalHotel
         static bool[,] diciembre = new bool[31, 10]; // 31 días x 10 habitaciones para diciembre
 
         // Listas para almacenar información de huéspedes y reservas
-        static List<(string NombreHuesped, int NumeroHabitacion, long dni, string mail)> huespedes = new List<(string, int, long, string)>();
+       
         static List<ReservasStruct> reservas = new List<ReservasStruct>();
-
+        static List<huesped> huespedes = new List<huesped>();
         static void Main(string[] args)
         {
 
@@ -226,19 +238,7 @@ namespace IntegradorFinalHotel
                     break; 
             }
 
-            if (disponibilidad)
-            {
-
-                huespedes.Add((nombreHuesped, numeroHabitacion, dni, mail));
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("Reserva creada con éxito!");
-            }
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-
-            Console.WriteLine("Apreta cualquier tecla para regresar al menu...");
-            Console.ReadKey();
-            Console.Clear();
-
+           
         }
         static void segunMes(bool[,] mesSelect, int numeroMes,int catDiasMes,int mes)
         {
@@ -331,7 +331,8 @@ namespace IntegradorFinalHotel
                     DateTime checkIn = new DateTime(2025, mes, dia);
                     ReservasStruct reserva = new ReservasStruct(idReserva, dni, numeroHabitacion, checkIn, cantNoches);
                     reservas.Add(reserva);
-                    huespedes.Add((nombreHuesped,numeroHabitacion,dni,mail));
+                    huesped huespedNuevo = new huesped(nombreHuesped, numeroHabitacion, dni, mail);
+                    huespedes.Add(huespedNuevo);
                 }
                 else
                 {
@@ -557,7 +558,7 @@ namespace IntegradorFinalHotel
 
                             for (int j = huespedes.Count - 1; j >= 0; j--)
                             {
-                                if (huespedes[j].dni == dniHues) 
+                                if (huespedes[j].Dni == dniHues) 
                                 {
                                     huespedes.RemoveAt(j);
                                     huespedEliminado = true; // Indicamos que se eliminó al huésped
