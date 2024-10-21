@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Nuevos cambios 20/10
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -18,32 +19,30 @@ namespace IntegradorFinalHotel
 
         struct ReservasStruct
         {
-            public int IdReserva;
-            public long dniHuesped;
-            public int numeroHabitacion;
-            public DateTime checkIn;
-            public int cantidadNoches;
+            public int IdReserva, NumeroHabitacion, CantidadNoches;
+            public long DniHuesped;
+            public DateTime CheckIn;
 
-            public ReservasStruct(int IdReserva, long dniHuesped, int numeroHabitacion, DateTime checkIn, int cantidadNoches)
+            public ReservasStruct(int idReserva, long dniHuesped, int numeroHabitacion, DateTime checkIn, int cantidadNoches)
             {
-                this.IdReserva = IdReserva;
-                this.dniHuesped = dniHuesped;
-                this.numeroHabitacion = numeroHabitacion;
-                this.checkIn = checkIn;
-                this.cantidadNoches = cantidadNoches;
+                IdReserva = idReserva;
+                DniHuesped = dniHuesped;
+                NumeroHabitacion = numeroHabitacion;
+                CheckIn = checkIn;
+                CantidadNoches = cantidadNoches;
             }
         }
-       
 
         // Variables globales
         static int numeroHabitacion; // Almacena el número de la habitación seleccionada
-        static int idReserva = 0; // Identificador de la reserva
+        static int idReserva = 0;
         static Boolean salida = true; // Controla la salida del menú principal
 
         // Matrices para gestionar la disponibilidad de habitaciones para cada mes
         static bool[,] octubre = new bool[31, 10]; // 31 días x 10 habitaciones para octubre
-        static bool[,] noviembre = new bool[30, 10]; // 30 días x 10 habitaciones para noviembre
-        static bool[,] diciembre = new bool[31, 10]; // 31 días x 10 habitaciones para diciembre
+        static bool[,] noviembre = new bool[30, 10];
+        static bool[,] diciembre = new bool[31, 10];
+
 
         // Listas para almacenar información de huéspedes y reservas
         static List<(string NombreHuesped, int NumeroHabitacion, long dni, string mail)> huespedes = new List<(string, int, long, string)>();
@@ -51,8 +50,7 @@ namespace IntegradorFinalHotel
 
         static void Main(string[] args)
         {
-
-            inicializarArreglos();
+            inicializarMatrices();
             // Bucle principal del menú
             do
             {
@@ -63,12 +61,12 @@ namespace IntegradorFinalHotel
         {
             Console.Clear();
             string[] opciones = new string[] {
-             "Elija la opción:",
+            "Elija la opción:",
             "1. Crear Reserva",
             "2. Modificar Reserva",
             "3. Cancelar Reserva",
             "4. Buscar huesped por nombre",
-           "5. Listar reservas ordenadas",
+            "5. Listar reservas ordenadas",
             "6. Salir"
         };
             Boolean salidaMenu = true;
@@ -79,11 +77,14 @@ namespace IntegradorFinalHotel
             switch (eleccion)
             {
                 case "1":
-                    agregarReserva(); break; // Llama al método para agregar una reserva
-                                             // case "2": modificarReserva(); break; // Para implementar la modificación de reservas
-                case "3": eliminarReserva(); break; // Para implementar la cancelación de reservas
-                                                    // case "4": busquedaReserva(); break; // Para buscar reservas por nombre
-                                                    // case "5": listarReservasOrdenadas(); break; // Para listar reservas ordenadas
+                    agregarReserva();
+                    break;
+                // case "2": modificarReserva(); break; // Para implementar la modificación de reservas
+                case "3":
+                    eliminarReserva();
+                    break;
+                // case "4": busquedaReserva(); break; // Para buscar reservas por nombre
+                // case "5": listarReservasOrdenadas(); break; // Para listar reservas ordenadas
                 case "6": salidaMenu = false; return salidaMenu; // Salida del menú
                 default:
                     Console.Clear();
@@ -98,7 +99,7 @@ namespace IntegradorFinalHotel
             return salidaMenu;
         }
 
-
+        //Funcion para centrar texto del menu
         static string CentrarTexto(string texto, int longitudMaxima)
         {
             int espaciosTotales = longitudMaxima - texto.Length;   // Calcula los espacios que faltan para alinear
@@ -107,11 +108,11 @@ namespace IntegradorFinalHotel
 
             // Usa PadRight para centrar el texto
             return new string(' ', espaciosIzquierda) + texto + new string(' ', espaciosDerecha).PadRight(espaciosDerecha);
-        }//Funcion para centrar el texto en la funcion dibujar menu
-        //Funcion para centrar el texto en la funcion dibujar menu
-        static void inicializarArreglos()
+        }
+
+        //Inicializa boleano de matrices de meses con sus habitaciones todas en false
+        static void inicializarMatrices()
         {
-       
             for (int i = 0; i < 30; i++)
             {
                 for (int j = 0; j < 9; j++)
@@ -128,8 +129,19 @@ namespace IntegradorFinalHotel
                 }
             }
         }
+
         static void agregarReserva()
         {///datos del huesped
+
+            long dni;
+            bool validacionIngresoDni, opcionValida, disponibilidad = true;
+            string[] opcionesMes = new string[] {
+             "Elija la opción:",
+             "1. Octubre",
+             "2. Noviembre",
+             "3. Diciembre"
+             };
+            int mes, dia, cantNoches, opcionNumero;
             Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
             Console.Write("Ingrese el nombre del huésped: ");
@@ -137,44 +149,33 @@ namespace IntegradorFinalHotel
             string nombreHuesped = Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Ingrese el DNI del huésped: ");
-            bool valIngreso = true;
-            long dni;
             do
             {
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 string ingresoDni = Console.ReadLine();
-               
-                 valIngreso =long.TryParse(ingresoDni, out dni);
-                if (!valIngreso)
+                validacionIngresoDni = long.TryParse(ingresoDni, out dni);
+                if (!validacionIngresoDni)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Ingreso invalido! vuelva a ingresar:");
                 }
-            } while (!valIngreso);//validacion de ingreso long
-           
+            } while (!validacionIngresoDni);
+
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Ingrese el mail del huésped: ");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             string mail = Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
-            ///datos de la reserva
-            string[] opcionesMes = new string[] {
-             "Elija la opción:",
-            "1. Octubre",
-            "2. Noviembre",
-            "3. Diciembre"         
-        };
-            bool opcionValida = true;
-            int opcionNumero;
+
             // valida que se ingrese bien la opcion del mes
             do
             {
                 menuOpciones("Elije el Mes: ", opcionesMes);
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 string opcion = Console.ReadLine();
-               
-                opcionValida= int.TryParse(opcion, out opcionNumero); 
-                if (!opcionValida || opcionNumero>3 || opcionNumero <=0)
+
+                opcionValida = int.TryParse(opcion, out opcionNumero);
+                if (!opcionValida || opcionNumero > 3 || opcionNumero <= 0)
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -182,137 +183,129 @@ namespace IntegradorFinalHotel
                     opcionValida = false;
                 }
             } while (!opcionValida);
-            int mes;
-                int dia;
-                int cantNoches;
-                bool disponibilidad = true;
-                int habitacion;
+
             //se elije el mes y se agrega a la matriz correspondiente
-                switch (opcionNumero)
-                {
-                    case 1:
+            switch (opcionNumero)
+            {
+                case 1:
+                    mes = 10; // Corresponde a Octubre
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("Ingrese el día: ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    dia = int.Parse(Console.ReadLine());
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("Ingrese la cantidad de noches: ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    cantNoches = int.Parse(Console.ReadLine());
+                    do
+                    {
                         Console.ForegroundColor = ConsoleColor.White;
-                        mes = 10; // Corresponde a Octubre
-                        Console.Write("Ingrese el día: ");
+                        Console.Write("Ingrese del 1 al 10 el numero de habitacion: ");
                         Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                        dia = int.Parse(Console.ReadLine());
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("Ingrese la cantidad de noches: ");
-                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                        cantNoches = int.Parse(Console.ReadLine());
-
-                        do
+                        numeroHabitacion = int.Parse(Console.ReadLine()) - 1;
+                        disponibilidad = verificarDisponibilidad(octubre, dia, cantNoches, numeroHabitacion);
+                        if (disponibilidad)
                         {
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("Ingrese del 1 al 10 el numero de habitacion: ");
-                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                            numeroHabitacion = int.Parse(Console.ReadLine()) - 1;
-                            disponibilidad = verificarDisponibilidad(octubre, dia, cantNoches, numeroHabitacion);
-                            if (disponibilidad)
-                            {
-                                idReserva++;
-                                DateTime checkIn = new DateTime(2025, mes, dia);
-                                ReservasStruct reserva = new ReservasStruct();
-                                reservas.Add(reserva);
-                            }
-                            else
-                            {
-
-                                obtenerHabitacionesDisponibles(diciembre, dia, cantNoches);
-                            }
-                        } while (!disponibilidad);
-                    
-                    break;
-
-                    case 2:
-                        Console.ForegroundColor = ConsoleColor.White;
-                        mes = 11; // Corresponde a Noviembre
-                        Console.Write("Ingrese el día: ");
-                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                        dia = int.Parse(Console.ReadLine());
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("Ingrese la cantidad de noches: ");
-                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                        cantNoches = int.Parse(Console.ReadLine());
-                        do
+                            idReserva++;
+                            DateTime checkIn = new DateTime(2025, mes, dia);
+                            ReservasStruct reserva = new ReservasStruct();
+                            reservas.Add(reserva);
+                        }
+                        else
                         {
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("Ingrese del 1 al 10 el numero de habitacion: ");
-                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                            numeroHabitacion = int.Parse(Console.ReadLine()) - 1;
-                            disponibilidad = verificarDisponibilidad(octubre, dia, cantNoches, numeroHabitacion);
-                            if (disponibilidad)
-                            {
-                                idReserva++;
-                                DateTime checkIn = new DateTime(2025, mes, dia);
-                                ReservasStruct reserva = new ReservasStruct();
-                                reservas.Add(reserva);
-                            }
-                            else
-                            {
-
-                                obtenerHabitacionesDisponibles(diciembre, dia, cantNoches);
-                            }
-                        } while (!disponibilidad);
-                  
-                    break;
-
-                    case 3:
-                        Console.ForegroundColor = ConsoleColor.White;
-                        mes = 12; // Corresponde a Diciembre
-                        Console.Write("Ingrese el día: ");
-                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                        dia = int.Parse(Console.ReadLine());
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write("Ingrese la cantidad de noches: ");
-                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                        cantNoches = int.Parse(Console.ReadLine());
-
-                        // Verifica disponibilidad para diciembre
-                        do
-                        {
-                            Console.Write("Ingrese del 1 al 10 el numero de habitacion: ");
-                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                            numeroHabitacion = int.Parse(Console.ReadLine()) - 1;
-                            disponibilidad = verificarDisponibilidad(octubre, dia, cantNoches, numeroHabitacion);
-                            if (disponibilidad)
-                            {
-                                idReserva++;
-                                DateTime checkIn = new DateTime(2025, mes, dia);
-                                ReservasStruct reserva = new ReservasStruct();
-                                reservas.Add(reserva);
-                            }
-                            else
-                            {
-
-                                obtenerHabitacionesDisponibles(diciembre, dia, cantNoches);
-                            }
-                        } while (!disponibilidad);
-                 
+                            obtenerHabitacionesDisponibles(diciembre, dia, cantNoches);
+                        }
+                    } while (!disponibilidad);
 
                     break;
 
-                    default:
-                        Console.ForegroundColor = ConsoleColor.DarkRed;
-                        Console.WriteLine("Opción inválida!");
-                    
-                        break;
-                }
+                case 2:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    mes = 11; // Corresponde a Noviembre
+                    Console.Write("Ingrese el día: ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    dia = int.Parse(Console.ReadLine());
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("Ingrese la cantidad de noches: ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    cantNoches = int.Parse(Console.ReadLine());
+                    do
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("Ingrese del 1 al 10 el numero de habitacion: ");
+                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                        numeroHabitacion = int.Parse(Console.ReadLine()) - 1;
+                        disponibilidad = verificarDisponibilidad(octubre, dia, cantNoches, numeroHabitacion);
+                        if (disponibilidad)
+                        {
+                            idReserva++;
+                            DateTime checkIn = new DateTime(2025, mes, dia);
+                            ReservasStruct reserva = new ReservasStruct();
+                            reservas.Add(reserva);
+                        }
+                        else
+                        {
+
+                            obtenerHabitacionesDisponibles(diciembre, dia, cantNoches);
+                        }
+                    } while (!disponibilidad);
+
+                    break;
+
+                case 3:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    mes = 12; // Corresponde a Diciembre
+                    Console.Write("Ingrese el día: ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    dia = int.Parse(Console.ReadLine());
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("Ingrese la cantidad de noches: ");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    cantNoches = int.Parse(Console.ReadLine());
+
+                    // Verifica disponibilidad para diciembre
+                    do
+                    {
+                        Console.Write("Ingrese del 1 al 10 el numero de habitacion: ");
+                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                        numeroHabitacion = int.Parse(Console.ReadLine()) - 1;
+                        disponibilidad = verificarDisponibilidad(octubre, dia, cantNoches, numeroHabitacion);
+                        if (disponibilidad)
+                        {
+                            idReserva++;
+                            DateTime checkIn = new DateTime(2025, mes, dia);
+                            ReservasStruct reserva = new ReservasStruct();
+                            reservas.Add(reserva);
+                        }
+                        else
+                        {
+
+                            obtenerHabitacionesDisponibles(diciembre, dia, cantNoches);
+                        }
+                    } while (!disponibilidad);
+
+
+                    break;
+
+                default:
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("Opción inválida!");
+
+                    break;
+            }
             if (disponibilidad)
             {
-
                 huespedes.Add((nombreHuesped, numeroHabitacion, dni, mail));
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("Reserva creada con éxito!");
             }
             Console.ForegroundColor = ConsoleColor.DarkGray;
-
             Console.WriteLine("Apreta cualquier tecla para regresar al menu...");
             Console.ReadKey();
             Console.Clear();
-
         }
 
+        //Funcion Para Dibujar los asteriscos en el menu
         static void menuOpciones(string titulo, string[] opciones)
         {
 
@@ -344,7 +337,7 @@ namespace IntegradorFinalHotel
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine(borde);
             Console.ResetColor();
-        }//Funcion Para Dibujar Menu
+        }
 
         // Método para verificar la disponibilidad de habitaciones
         static bool verificarDisponibilidad(bool[,] mes, int dia, int cantidadNoches, int habitacion)
@@ -355,38 +348,33 @@ namespace IntegradorFinalHotel
                 if (i >= mes.GetLength(0) || mes[i, habitacion]) // Verifica si se sale de los días del mes o si ya está ocupado
                 {
                     return false; // Habitación no disponible
-
                 }
                 else
                 {
                     for (int k = dia; k < dia + cantidadNoches; k++)
                     {
-                        // Marca los días como ocupados
-                        mes[i-1, habitacion] = true;
+                        mes[i - 1, habitacion] = true; //Marca los dias ocupados
                     }
                 }
             }
-            // Habitación disponible
-            return true;
+            return true; //Habitacion disponible
         }
         // Función que retorna una lista de las habitaciones disponibles para un rango de días en un mes específico.
         static void obtenerHabitacionesDisponibles(bool[,] mes, int dia, int cantidadNoches)
         {
             List<int> habitacionesLibres = new List<int>();
-            Console.ForegroundColor= ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("Habitacion no disponible..!");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Verificando disponibilidad desde el día {dia} por {cantidadNoches} noches.");
 
-            for (int i = dia; i <= dia+cantidadNoches  || i < mes.GetLength(1); i++)
+            for (int i = dia; i <= dia + cantidadNoches || i < mes.GetLength(1); i++)
             {
                 if (!mes[dia, i])
                 {
                     habitacionesLibres.Add(i);
                 }
             }
-               
-            
 
             // Muestra las habitaciones disponibles.
             if (habitacionesLibres.Count > 0)
@@ -403,7 +391,6 @@ namespace IntegradorFinalHotel
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("No hay habitaciones disponibles para el rango de fechas seleccionado.");
             }
-
             Console.ResetColor(); // Restaurar colores de consola.
         }
 
@@ -412,14 +399,11 @@ namespace IntegradorFinalHotel
             Console.Clear();
             long dniHues;
             int codigoEliminacion;
-            bool valCodigo = true;
-            bool eliminado = false;
-            bool huespedEliminado = false; // Nueva bandera para el huésped
+            bool valCodigo, eliminado = false, huespedEliminado = false;
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("******_Eliminacion de una Reserva/Huesped_******");
             bool hayReservas = mostrarReservas();
             Console.ResetColor();
-           
 
             if (hayReservas)
             {
@@ -440,7 +424,7 @@ namespace IntegradorFinalHotel
                     {
                         if (reservas[i].IdReserva == codigoEliminacion)
                         {
-                            dniHues = reservas[i].dniHuesped;
+                            dniHues = reservas[i].DniHuesped;
                             reservas.RemoveAt(i);
                             eliminado = true;
 
@@ -452,7 +436,6 @@ namespace IntegradorFinalHotel
                                     huespedEliminado = true; // Indicamos que se eliminó al huésped
                                 }
                             }
-
                             if (!huespedEliminado)
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
@@ -460,7 +443,6 @@ namespace IntegradorFinalHotel
                             }
                         }
                     }
-
                     if (eliminado)
                     {
                         Console.Clear();
@@ -483,36 +465,30 @@ namespace IntegradorFinalHotel
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("No se encontró la reserva.");
                     }
-
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine("Apriete cualquier tecla para continuar...");
                     Console.ReadKey();
                 } while (!valCodigo);
             }
 
-
-
-            else if (!hayReservas)
+            else //Si no hay reservas
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("No existen registros");
                 Console.ReadKey();
             }
-
-
-
-
-
-
-
         }
+
         static bool mostrarReservas()
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             for (int i = 0; i < reservas.Count; i++)
             {
-                Console.WriteLine($"Id:{reservas[i].IdReserva} - Dni del Huesped: {reservas[i].dniHuesped} - Numero de habitacion: {reservas[i].numeroHabitacion} - Check-in:  {reservas[i].checkIn.Day}/{reservas[i].checkIn.Month}/{reservas[i].checkIn.Year} -  Cantidad de noches: {reservas[i].cantidadNoches}");
+                Console.Write($"Id:{reservas[i].IdReserva} - Dni del Huesped: {reservas[i].DniHuesped}    ");
+                Console.Write($"- Numero de habitacion: {reservas[i].NumeroHabitacion} -");
+                Console.Write($" Check-in:  {reservas[i].CheckIn.Day}/{reservas[i].CheckIn.Month}/{reservas[i].CheckIn.Year} -");
+                Console.WriteLine($" Cantidad de noches: {reservas[i].CantidadNoches}");
                 Console.WriteLine("--------------------------------------------------------");
             }
             if (reservas.Count == 0)
@@ -520,13 +496,13 @@ namespace IntegradorFinalHotel
                 return false;
             }
             return true;
-
         }
-        
+
         static void modificarReserva()
         {
-            
+
         }
+
         static void buscarHuespedNombre()
         {
 
@@ -536,15 +512,21 @@ namespace IntegradorFinalHotel
 
 
         }
-        
-    
     }
+}
 
 
 
 
 
-    }
+
+
+
+
+
+
+
+
 
 
 
