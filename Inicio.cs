@@ -182,6 +182,9 @@ namespace IntegradorFinalHotel
                     opcionValida = false;
                 }
             } while (!opcionValida);
+
+
+
             int mes;
             string diaV;
             int dia = 0;
@@ -189,7 +192,9 @@ namespace IntegradorFinalHotel
             bool disponibilidad = true;
             int habitacion;
             bool validarD = true;
+
             //se elije el mes y se agrega a la matriz correspondiente
+            
             switch (opcionNumero)
             {
                 case 1:
@@ -221,6 +226,8 @@ namespace IntegradorFinalHotel
 
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.Write("Ingrese la cantidad de noches: ");
+                    //agregar validacion de noches:
+
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     cantNoches = int.Parse(Console.ReadLine());
 
@@ -241,7 +248,7 @@ namespace IntegradorFinalHotel
                         else
                         {
 
-                            obtenerHabitacionesDisponibles(diciembre, dia, cantNoches);
+                            obtenerHabitacionesDisponibles(octubre, dia, cantNoches);
                         }
                     } while (!disponibilidad);
 
@@ -281,7 +288,7 @@ namespace IntegradorFinalHotel
                         Console.Write("Ingrese del 1 al 10 el numero de habitacion: ");
                         Console.ForegroundColor = ConsoleColor.DarkMagenta;
                         numeroHabitacion = int.Parse(Console.ReadLine()) - 1;
-                        disponibilidad = verificarDisponibilidad(octubre, dia, cantNoches, numeroHabitacion);
+                        disponibilidad = verificarDisponibilidad(noviembre, dia, cantNoches, numeroHabitacion);
                         if (disponibilidad)
                         {
                             idReserva++;
@@ -292,7 +299,7 @@ namespace IntegradorFinalHotel
                         else
                         {
 
-                            obtenerHabitacionesDisponibles(diciembre, dia, cantNoches);
+                            obtenerHabitacionesDisponibles(noviembre, dia, cantNoches);
                         }
                     } while (!disponibilidad);
 
@@ -333,7 +340,7 @@ namespace IntegradorFinalHotel
                         Console.Write("Ingrese del 1 al 10 el numero de habitacion: ");
                         Console.ForegroundColor = ConsoleColor.DarkMagenta;
                         numeroHabitacion = int.Parse(Console.ReadLine()) - 1;
-                        disponibilidad = verificarDisponibilidad(octubre, dia, cantNoches, numeroHabitacion);
+                        disponibilidad = verificarDisponibilidad(diciembre, dia, cantNoches, numeroHabitacion);
                         if (disponibilidad)
                         {
                             idReserva++;
@@ -371,6 +378,7 @@ namespace IntegradorFinalHotel
             Console.Clear();
 
         }
+      
         static bool validarDia(string dia, int mes)
         {
             bool valDia = true;
@@ -545,7 +553,7 @@ namespace IntegradorFinalHotel
 
                             for (int j = huespedes.Count - 1; j >= 0; j--)
                             {
-                                if (huespedes[j].dni == dniHues)
+                                if (huespedes[j].dni == dniHues) 
                                 {
                                     huespedes.RemoveAt(j);
                                     huespedEliminado = true; // Indicamos que se eliminó al huésped
@@ -632,7 +640,7 @@ namespace IntegradorFinalHotel
         }
         static void mostrarReservasOrdenadas()
         {
-
+           
 
         }
         
