@@ -41,6 +41,7 @@ namespace IntegradorFinalHotel
                 CantidadNoches = cantidadNoches;
             }
         }
+
         struct huesped
         {
            public string NombreHuesped;
@@ -56,34 +57,14 @@ namespace IntegradorFinalHotel
                 Mail = mail;
             }
         }
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // Matrices para gestionar la disponibilidad de habitaciones para cada mes
         static bool[,] octubre = new bool[31, 10]; // 31 días x 10 habitaciones para octubre
         static bool[,] noviembre = new bool[30, 10]; // 30 días x 10 habitaciones para noviembre
         static bool[,] diciembre = new bool[31, 10]; // 31 días x 10 habitaciones para diciembre
-
-        
-       
-        
+   
         static void Main(string[] args)
-        {
-
-            
+        {      
             inicializarArreglos();
             cargarDatosDefault();
             
@@ -196,7 +177,7 @@ namespace IntegradorFinalHotel
             Console.Clear();
             Console.Write("Ingrese el nombre del huésped: ");
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-             nombreHuesped = Console.ReadLine();
+            nombreHuesped = Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Ingrese el DNI del huésped: ");
             bool valIngreso = true;
@@ -245,9 +226,6 @@ namespace IntegradorFinalHotel
                 }
             } while (!opcionValida);
 
-
-
-
             //se elije el mes y se agrega a la matriz correspondiente
 
             switch (opcionNumero)
@@ -269,8 +247,7 @@ namespace IntegradorFinalHotel
                     Console.WriteLine("Opción inválida!");
                     break; 
             }
-
-           
+   
         }
         static void segunMes(bool[,] mesSelect, int numeroMes,int catDiasMes,int mes)
         {
@@ -299,12 +276,9 @@ namespace IntegradorFinalHotel
 
             } while (!validarD);
 
-
-
             Console.ForegroundColor = ConsoleColor.White;
 
             // validacion de noches:                    
-
 
             do
             {
@@ -319,15 +293,12 @@ namespace IntegradorFinalHotel
                     Console.WriteLine("Ingreso no permitido!, vuelva a intentar");
                     Console.ResetColor();
                 }
-
-
                 if (valNoche)
                 {
                     cantNoches = int.Parse(ingresoNoches);
                 }
 
             } while (!valNoche);
-
 
             do
             {
@@ -449,9 +420,7 @@ namespace IntegradorFinalHotel
                         break;
 
                     default: return false;
-
-                }
-                
+                }               
             }
             return valDia;
 
@@ -528,9 +497,7 @@ namespace IntegradorFinalHotel
                 {
                     habitacionesLibres.Add(i);
                 }
-            }
-               
-            
+            }                         
 
             // Muestra las habitaciones disponibles.
             if (habitacionesLibres.Count > 0)
@@ -642,13 +609,6 @@ namespace IntegradorFinalHotel
                 Console.WriteLine("No existen registros");
                 Console.ReadKey();
             }
-
-
-
-
-
-
-
         }
         static bool mostrarReservas()
         {
@@ -686,7 +646,6 @@ namespace IntegradorFinalHotel
                 Console.WriteLine();
             }
         }
-
         
         static void modificarReserva()
         {
@@ -702,28 +661,10 @@ namespace IntegradorFinalHotel
            
 
         }
-        
-    
     }
 
 
 
 
 
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
